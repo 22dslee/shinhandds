@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>사과게임 - 합 10 맞추기</title>
+<title>사과게임 - 금융본부 미니 게임대회</title>
 <style>
   :root{
     --navy:#0B1F3A;
@@ -40,7 +40,7 @@
     font-size:13px; color: var(--ice); opacity:0.75;
   }
 
-  /* 브랜드 헤더 (공통) */
+  /* 브랜드 헤더 */
   .brand-bar{
     width:100%;
     max-width: 640px;
@@ -276,7 +276,7 @@
 </head>
 <body>
 
-<!-- 사번 입력 최초 진입 모달 -->
+<!-- 사번/팀 입력 최초 진입 모달 -->
 <div id="authOverlay" class="show">
   <div class="modal">
     <h2>🍎 사과게임 시작</h2>
@@ -326,7 +326,7 @@
   <div class="hud">
     <div class="stat time" id="timeStat">
       <div class="label">남은 시간</div>
-      <div class="value" id="timeVal">01:30</div>
+      <div class="value" id="timeVal">01:50</div>
     </div>
     <div class="stat score">
       <div class="label">점수</div>
@@ -373,16 +373,17 @@
 
 <script>
 (function(){
-  // [설정] Google Apps Script 웹 앱 URL
-  var GOOGLE_WEBHOOK_URL = "https://script.google.com/macros/s/AKfycbyjwLlz_56FI6ou7-V_5x2CtjEd1YV7VgONo2Shpc4-yuJ1IcACaFGj_oez_EIVfcxP8w/exec";
+  // [설정] 최신 배포된 Google Apps Script 웹 앱 URL 및 식별자
+  var GOOGLE_WEBHOOK_URL = "https://script.google.com/macros/s/AKfycbyY6mM4y9ltyZhDn7fMCctYajEBye1sxZpQrQ-FcabhllionztMTlJEJMCKCDy_ZxCOMg/exec";
+  var GAME_NAME = "사과게임";
 
-  // 난이도는 보통 고정 (모바일 화면에서도 잘리지 않는 12x9 크기)
   var COLS = 12, ROWS = 9, GAME_TIME = 110;
-  var curLevel = 'medium';
+  var curLevel = 'medium (12x9)';
   var board, cells, boardEl, selRect, sumTag;
   var timeLeft, score, timerId, gameActive;
   var dragging = false, startCell = null, curSel = [];
   var currentSabun = "";
+  var currentTeam = "";
 
   var app = document.getElementById('app');
   boardEl = document.getElementById('board');
@@ -405,20 +406,18 @@
   var authStartBtn = document.getElementById('authStartBtn');
   var playerBadge = document.getElementById('playerBadge');
   var authError = document.getElementById('authError');
-  var currentTeam = "";
 
-  // 데이터베이스(구글 스프레드시트) 로깅 함수
+  // 스프레드시트 비동기 전송 함수
   function logEvent(eventType, extraData){
-    if(!GOOGLE_WEBHOOK_URL || GOOGLE_WEBHOOK_URL.indexOf("여기에") !== -1) return;
+    if(!GOOGLE_WEBHOOK_URL) return;
     var payload = Object.assign({
+      game: GAME_NAME,
       team: currentTeam,
       sabun: currentSabun,
       event: eventType,
-      level: curLevel,
-      game: "사과게임"
+      level: curLevel
     }, extraData || {});
 
-    // mode: 'no-cors'를 적용하여 CORS 차단 없이 비동기로 안전하게 기록 전송
     fetch(GOOGLE_WEBHOOK_URL, {
       method: "POST",
       mode: "no-cors",
@@ -462,7 +461,6 @@
     return cnt;
   }
 
-  // 남은 사과들로 합이 10이 되는 직사각형 조합이 하나라도 있는지 확인 (2D prefix sum)
   function hasValidMove(){
     var pre = [];
     for(var r=0;r<=ROWS;r++){ pre.push(new Array(COLS+1).fill(0)); }
@@ -501,7 +499,6 @@
     };
   }
 
-  // 인식 범위를 넓히기 위해, 선택 사각형과 셀 사각형이 "조금이라도 겹치면" 선택된 것으로 처리한다.
   function cellsInRect(rect){
     var res = [];
     var wrapRect = boardEl.getBoundingClientRect();
@@ -611,12 +608,17 @@
   }
 
   function endGame(reason){
-    // reason: 'cleared' | 'timeout' | 'nomoves'
     gameActive = false;
     clearInterval(timerId);
 
-    // 구글 시트로 게임 종료 및 최종 점수 전송
-    logEvent("종료", { score: score, reason: reason });
+    // 상세 내용 구성
+    var detailText = reason === 'cleared' ? '보드 올클리어' : (reason === 'nomoves' ? '가능한 조합 없음' : '시간 종료');
+
+    // 구글 시트로 종료 로그 전송
+    logEvent("종료", {
+      score: score,
+      detail: detailText + ` (사과 ${score}개 획득)`
+    });
 
     if(reason === 'cleared'){
       modalTitle.textContent = '보드 클리어! 🎉';
@@ -644,11 +646,10 @@
     updateHud();
     startTimer();
 
-    // 구글 시트로 게임 시작 기록 전송
+    // 시작 로그 전송
     logEvent("시작", { score: 0 });
   }
 
-  // 최초 사번 인증 확인 이벤트
   function handleAuth(){
     var teamVal = teamSelect.value;
     var val = sabunInput.value.trim();
@@ -705,7 +706,6 @@
     if(e.target === ruleOverlay) ruleOverlay.classList.remove('show');
   });
 
-  // 페이지 진입 시 사번 입력창에 자동 포커스
   sabunInput.focus();
 })();
 </script>
