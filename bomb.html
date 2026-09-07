@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>지뢰찾기</title>
+<title>지뢰찾기 - 금융본부 미니 게임대회</title>
 <style>
   :root{
     --navy:#0B1F3A;
@@ -37,7 +37,7 @@
   }
   .titlebar .sub{ font-size:13px; color: var(--ice); opacity:0.75; }
 
-  /* 브랜드 헤더 (공통) */
+  /* 브랜드 헤더 */
   .brand-bar{
     width:100%;
     max-width: 640px;
@@ -314,7 +314,7 @@
   </div>
 
   <div class="panel">
-    <div class="counter" id="mineCount">10</div>
+    <div class="counter" id="mineCount">24</div>
     <div class="facebtn" id="faceBtn">🙂</div>
     <div class="counter timer" id="timeCount">000</div>
   </div>
@@ -354,15 +354,16 @@
 
 <script>
 (function(){
-  // [설정] Google Apps Script 웹 앱 URL
-  var GOOGLE_WEBHOOK_URL = "https://script.google.com/macros/s/AKfycbyjwLlz_56FI6ou7-V_5x2CtjEd1YV7VgONo2Shpc4-yuJ1IcACaFGj_oez_EIVfcxP8w/exec";
+  // [설정] 최신 Google Apps Script 웹 앱 URL 및 식별자
+  var GOOGLE_WEBHOOK_URL = "https://script.google.com/macros/s/AKfycbyY6mM4y9ltyZhDn7fMCctYajEBye1sxZpQrQ-FcabhllionztMTlJEJMCKCDy_ZxCOMg/exec";
+  var GAME_NAME = "지뢰찾기";
 
-  // 난이도는 보통(12x12, 지뢰 24개) 고정
   var rows = 12, cols = 12, mineCount = 24;
-  var curLevel = 'medium';
-  var grid; // {mine, revealed, flagged, adj}
+  var curLevel = 'medium (12x12, 지뢰 24개)';
+  var grid;
   var firstClick, gameOver, gameWon, timerId, elapsed;
   var currentSabun = "";
+  var currentTeam = "";
 
   var boardEl = document.getElementById('board');
   var mineCountEl = document.getElementById('mineCount');
@@ -379,17 +380,16 @@
   var authStartBtn = document.getElementById('authStartBtn');
   var playerBadge = document.getElementById('playerBadge');
   var authError = document.getElementById('authError');
-  var currentTeam = "";
 
-  // 데이터베이스(구글 스프레드시트) 로깅 함수
+  // 스프레드시트 비동기 전송 함수
   function logEvent(eventType, extraData){
-    if(!GOOGLE_WEBHOOK_URL || GOOGLE_WEBHOOK_URL.indexOf("여기에") !== -1) return;
+    if(!GOOGLE_WEBHOOK_URL) return;
     var payload = Object.assign({
+      game: GAME_NAME,
       team: currentTeam,
       sabun: currentSabun,
       event: eventType,
-      level: curLevel,
-      game: "지뢰찾기"
+      level: curLevel
     }, extraData || {});
 
     fetch(GOOGLE_WEBHOOK_URL, {
@@ -467,10 +467,6 @@
   }
 
   function updateCellEl(div, cell){
-    div.classList.toggle('revealed', cell.revealed);
-    div.classList.toggle('flag', cell.flagged && !cell.revealed);
-    div.classList.toggle('mine', cell.revealed && cell.mine);
-    div.innerHTML = '';
     div.className = 'cell';
     if(cell.revealed){
       div.classList.add('revealed');
@@ -558,7 +554,12 @@
       refreshAllCells();
       faceBtn.textContent = '😵';
       showEnd(false);
-      logEvent("종료", { result: "패배", time: elapsed });
+
+      // 패배 시 로그 전송
+      logEvent("종료", {
+        score: "-",
+        detail: "지뢰 폭발 (패배, 진행: " + elapsed + "초)"
+      });
       return;
     }
 
@@ -570,7 +571,12 @@
       clearInterval(timerId);
       faceBtn.textContent = '😎';
       showEnd(true);
-      logEvent("종료", { result: "승리", time: elapsed });
+
+      // 승리 시 클리어 시간을 점수(score)로 기록 전송
+      logEvent("종료", {
+        score: elapsed,
+        detail: "클리어 성공 (" + elapsed + "초 소요)"
+      });
     }
   }
 
@@ -605,10 +611,10 @@
     overlay.classList.add('show');
   }
 
-  // long-press for touch flagging (미세한 떨림으로 취소되지 않도록 이동거리 기준으로 판단)
   var pressTimer = null, longPressed = false, touchStartPos = null;
   var touchActive = false, touchActiveClearTimer = null;
-  var MOVE_CANCEL_THRESHOLD = 12; // px
+  var MOVE_CANCEL_THRESHOLD = 12;
+
   function attachEvents(){
     boardEl.addEventListener('click', function(e){
       var t = e.target.closest('.cell');
@@ -617,8 +623,6 @@
     });
     boardEl.addEventListener('contextmenu', function(e){
       e.preventDefault();
-      // 안드로이드 등 일부 브라우저는 길게 누르면 자체적으로 contextmenu 이벤트를 발생시킴.
-      // 터치에 의한 것이면 이미 touchstart 타이머에서 깃발을 처리했으므로 여기서 또 처리하면 두 번 토글되어 깃발이 도로 사라진다.
       if(touchActive) return;
       var t = e.target.closest('.cell');
       if(!t) return;
@@ -652,7 +656,6 @@
     boardEl.addEventListener('touchend', function(e){
       clearTimeout(pressTimer);
       touchStartPos = null;
-      // contextmenu가 touchend 이후에 뒤늦게 발생하는 브라우저도 있어 약간의 여유를 두고 해제
       clearTimeout(touchActiveClearTimer);
       touchActiveClearTimer = setTimeout(function(){ touchActive = false; }, 400);
     });
@@ -675,11 +678,10 @@
     render();
     updateMineCounter();
 
-    // 구글 시트로 게임 시작 기록 전송
-    logEvent("시작", {});
+    // 시작 로그 전송
+    logEvent("시작", { score: 0 });
   }
 
-  // 최초 사번 인증 확인 이벤트
   function handleAuth(){
     var teamVal = teamSelect.value;
     var val = sabunInput.value.trim();
@@ -732,7 +734,6 @@
   });
 
   attachEvents();
-  // 페이지 진입 시 사번 입력창에 자동 포커스
   sabunInput.focus();
 })();
 </script>
