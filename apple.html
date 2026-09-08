@@ -30,12 +30,6 @@
     display:flex; flex-direction:column; align-items:center;
     min-height:100vh; min-height:100dvh; padding: 12px; gap:8px;
   }
-  .titlebar{ text-align:center; }
-  .titlebar h1{
-    font-size: clamp(18px, 3.2vw, 24px);
-    margin:0 0 4px; font-weight:700; letter-spacing:-0.02em; color:#fff;
-  }
-  .titlebar .sub{ font-size:11px; color: var(--ice); opacity:0.75; }
 
   /* 브랜드 헤더 */
   .brand-bar{
@@ -74,7 +68,7 @@
     font-weight: 800;
     color: var(--navy);
     background: var(--sky);
-    padding: 2px 8px; /* 좌우 패딩을 살짝 넓혀 뱃지가 꽉 차 보이게 조정 */
+    padding: 2px 8px;
     border-radius: 999px;
     width: fit-content;
     letter-spacing: -0.01em;
@@ -85,7 +79,7 @@
     color: var(--ice);
     background: rgba(255, 255, 255, 0.08);
     border: 1px solid rgba(255, 255, 255, 0.2);
-    padding: 6px 12px; /* 태그 볼륨감 확대 */
+    padding: 6px 12px;
     border-radius: 999px;
     white-space: nowrap;
     letter-spacing: -0.01em;
@@ -148,35 +142,89 @@
     box-shadow: 0 0 10px rgba(79, 157, 222, 0.4);
   }
 
+  /* =========================================
+     [모바일 최적화 2단 대시보드]
+     ========================================= */
+  .game-dash{
+    width: 100%;
+    max-width: 640px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    background: linear-gradient(135deg, rgba(255,255,255,0.07), rgba(255,255,255,0.02));
+    border: 1px solid rgba(255,255,255,0.14);
+    border-radius: 14px;
+    padding: 10px 12px;
+    box-sizing: border-box;
+  }
+  .dash-left{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+  }
+  .game-title{
+    font-size: clamp(16px, 3.2vw, 19px);
+    font-weight: 800;
+    color: #fff;
+    margin: 0;
+    letter-spacing: -0.02em;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    white-space: nowrap;
+  }
   .player-tag{
-    font-size: 12px;
+    font-size: 11px;
     background: rgba(47, 191, 158, 0.15);
     border: 1px solid var(--accent);
     color: var(--accent);
-    padding: 3px 10px;
+    padding: 3px 9px;
     border-radius: 20px;
     font-weight: 600;
-    display:inline-block;
-    margin-top:6px;
+    white-space: nowrap;
+    cursor: pointer;
   }
+  .dash-stats{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    width: 100%;
+  }
+  .stat-card{
+    flex: 1;
+    background: rgba(6, 20, 36, 0.75);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 10px;
+    padding: 5px 6px;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-width: 0;
+  }
+  .stat-lbl{
+    font-size: 10px;
+    color: var(--ice);
+    opacity: 0.75;
+    line-height: 1.1;
+    margin-bottom: 2px;
+    white-space: nowrap;
+  }
+  .stat-val{
+    font-size: 16px;
+    font-weight: 800;
+    font-family: var(--font-num);
+    font-variant-numeric: tabular-nums;
+    line-height: 1.1;
+  }
+  .stat-card.time .stat-val { color: var(--sky); }
+  .stat-card.time.low .stat-val { color: var(--danger); }
+  .stat-card.score .stat-val { color: var(--accent); }
+  .stat-card.left .stat-val { color: #fff; }
 
-  .hud{
-    display:flex; gap:10px; flex-wrap:wrap; justify-content:center;
-  }
-  .stat{
-    background: rgba(255,255,255,0.06);
-    border: 1px solid rgba(255,255,255,0.12);
-    border-radius: 12px;
-    padding: 8px 16px;
-    min-width: 92px;
-    text-align:center;
-  }
-  .stat .label{ font-size:11px; color:var(--ice); opacity:0.7; margin-bottom:2px;}
-  .stat .value{ font-size:20px; font-weight:700; font-family: var(--font-num); font-variant-numeric: tabular-nums;}
-  .stat.time .value{ color: var(--sky); }
-  .stat.time.low .value{ color: var(--danger); }
-  .stat.score .value{ color: var(--accent); }
-
+  /* 보드 래퍼 */
   #board-wrap{
     position:relative;
     background: linear-gradient(180deg, #0E2A4A, #0A2036);
@@ -254,7 +302,7 @@
   }
   .sumTag.ok{ background: var(--accent); border-color: var(--accent); color:#04241c;}
 
-  .controls{ display:flex; gap:10px; }
+  .controls{ display:flex; gap:10px; margin-top:2px; }
   button.main{
     font-family: var(--font-ui); font-size:14px; font-weight:600;
     background: var(--blue); color:#fff; border:none;
@@ -273,6 +321,7 @@
 
   .hint{ font-size:12px; color:var(--ice); opacity:0.6; text-align:center; max-width:480px; }
 
+  /* 모달 */
   #overlay, #ruleOverlay, #authOverlay{
     position:fixed; inset:0;
     background: rgba(4,12,24,0.85);
@@ -293,7 +342,7 @@
   .modal h2{ margin:0 0 8px; font-size:22px; }
   .modal .bigscore{ font-size:42px; font-weight:800; color: var(--accent); margin: 10px 0; font-family: var(--font-num);}
   .modal p{ margin:0 0 18px; color: var(--ice); font-size:14px; line-height:1.6; }
-  .modal ol{ text-align:left; color:var(--ice); font-size:14px; line-height:1.8; padding-left:20px; margin:0 0 18px; }
+  .modal ol{ text-align:left; color:var(--ice); font-size:13px; line-height:1.8; padding-left:20px; margin:0 0 18px; }
 
   .auth-input{
     width: 100%; padding: 12px 14px;
@@ -311,6 +360,22 @@
   }
   select.auth-input option{ background: #123A63; color:#fff; }
   .auth-error{ color: var(--danger); font-size: 12px; margin: -10px 0 14px; height: 14px; display: block; }
+
+  /* 10대 업무수칙 팝업 레이아웃 */
+  .adPopup{
+    position:fixed; inset:0;
+    background:rgba(4,12,24,0.92);
+    display:none; justify-content:center; align-items:center;
+    z-index:9999; padding:20px;
+  }
+  .adBox{ text-align:center; max-width:90vw; }
+  .adBox img{
+    width:350px; max-width:90vw; border-radius:12px;
+    box-shadow:0 15px 40px rgba(0,0,0,0.6);
+  }
+  #adRestartBtn{
+    width:auto; min-width:140px; margin-top:16px;
+  }
 </style>
 </head>
 <body>
@@ -351,7 +416,7 @@
             <text x="20" y="27" text-anchor="middle" font-family="Arial, sans-serif" font-weight="800" font-size="18" fill="#fff">SDS</text>
           </svg>
         </div>
-		<div class="brand-text">
+        <div class="brand-text">
           <span class="brand-name">신한DS 금융본부</span>
           <span class="brand-dept">3분기 리버스 멘토링</span>
         </div>
@@ -365,47 +430,49 @@
     </div>
     
     <nav class="nav-games" aria-label="게임 종목 바로가기">
-      <a href="https://22dslee.github.io/shinhandds/ball.html" class="nav-item active">⚽ 공튀기기</a>
+      <a href="https://22dslee.github.io/shinhandds/ball.html" class="nav-item">⚽ 공튀기기</a>
       <a href="https://22dslee.github.io/shinhandds/mole.html" class="nav-item">🐹 두더지</a>
-      <a href="https://22dslee.github.io/shinhandds/apple.html" class="nav-item">🍎 사과</a>
+      <a href="https://22dslee.github.io/shinhandds/apple.html" class="nav-item active">🍎 사과</a>
       <a href="https://22dslee.github.io/shinhandds/bomb.html" class="nav-item">💣 지뢰</a>
       <a href="https://22dslee.github.io/shinhandds/drop.html" class="nav-item">💧 드롭</a>
     </nav>
   </div>
 
-<script>
-(function(){
-  var bar = document.getElementById('brandBar');
-  var toggle = document.getElementById('navToggle');
-  var KEY = 'sh_mini_navCollapsed';
-  if(!bar || !toggle) return;
-  var saved = localStorage.getItem(KEY);
-  if(saved === '1') bar.classList.add('collapsed');
-  toggle.addEventListener('click', function(){
-    var collapsed = bar.classList.toggle('collapsed');
-    localStorage.setItem(KEY, collapsed ? '1' : '0');
-  });
-})();
-</script>
+  <script>
+  (function(){
+    var bar = document.getElementById('brandBar');
+    var toggle = document.getElementById('navToggle');
+    var KEY = 'sh_mini_navCollapsed';
+    if(!bar || !toggle) return;
+    var saved = localStorage.getItem(KEY);
+    if(saved === '1') bar.classList.add('collapsed');
+    toggle.addEventListener('click', function(){
+      var collapsed = bar.classList.toggle('collapsed');
+      localStorage.setItem(KEY, collapsed ? '1' : '0');
+    });
+  })();
+  </script>
 
-  <div class="titlebar">
-    <h1>🍎 사과게임</h1>
-    <div class="sub">드래그해서 합이 10이 되는 사과를 없애보세요</div>
-    <div><span id="playerBadge" class="player-tag" style="display:none;"></span></div>
-  </div>
+  <!-- 가로형 2단 대시보드 (모바일 화면 완벽 최적화) -->
+  <div class="game-dash">
+    <div class="dash-left">
+      <h1 class="game-title">🍎 사과게임</h1>
+      <span id="playerBadge" class="player-tag" style="display:none;" title="클릭 시 팀/사번 변경"></span>
+    </div>
 
-  <div class="hud">
-    <div class="stat time" id="timeStat">
-      <div class="label">남은 시간</div>
-      <div class="value" id="timeVal">01:50</div>
-    </div>
-    <div class="stat score">
-      <div class="label">점수</div>
-      <div class="value" id="scoreVal">0</div>
-    </div>
-    <div class="stat">
-      <div class="label">남은 사과</div>
-      <div class="value" id="leftVal">0</div>
+    <div class="dash-stats">
+      <div class="stat-card time" id="timeStat">
+        <span class="stat-lbl">남은 시간</span>
+        <span class="stat-val" id="timeVal">01:50</span>
+      </div>
+      <div class="stat-card score">
+        <span class="stat-lbl">점수</span>
+        <span class="stat-val" id="scoreVal">0</span>
+      </div>
+      <div class="stat-card left">
+        <span class="stat-lbl">남은 사과</span>
+        <span class="stat-val" id="leftVal">108</span>
+      </div>
     </div>
   </div>
 
@@ -442,6 +509,15 @@
   </div>
 </div>
 
+<!-- 10대 업무수칙 팝업 (다시 시작 클릭 시 노출) -->
+<div class="adPopup" id="adPopup">
+  <div class="adBox">
+    <img src="ds_10.png" alt="신한DS 10대 업무수칙">
+    <br>
+    <button class="main" id="adRestartBtn">재시작하기</button>
+  </div>
+</div>
+
 <script>
 (function(){
   var GOOGLE_WEBHOOK_URL = "https://script.google.com/macros/s/AKfycbyelW0ZRxGPlKNkoHeXoDwQA5Xk5bmhkq9JbIIwKhJNtdCB__gIKfv8QMdgitGm05pUFQ/exec";
@@ -464,11 +540,15 @@
   var timeStat = document.getElementById('timeStat');
   var scoreVal = document.getElementById('scoreVal');
   var leftVal = document.getElementById('leftVal');
+
   var overlay = document.getElementById('overlay');
   var modalTitle = document.getElementById('modalTitle');
   var modalScore = document.getElementById('modalScore');
   var modalDesc = document.getElementById('modalDesc');
   var ruleOverlay = document.getElementById('ruleOverlay');
+
+  var adPopup = document.getElementById("adPopup");
+  var adRestartBtn = document.getElementById("adRestartBtn");
 
   var authOverlay = document.getElementById('authOverlay');
   var teamSelect = document.getElementById('teamSelect');
@@ -669,6 +749,7 @@
 
   function startGame(){
     overlay.classList.remove('show');
+    adPopup.style.display = 'none';
     score = 0; timeLeft = GAME_TIME; gameActive = true;
     buildBoard();
     var attempts = 0;
@@ -677,6 +758,14 @@
     startTimer();
     logEvent("시작", { score: 0 });
   }
+
+  // 10대 업무수칙 팝업 표시 (타이머 일시 정지)
+  function showNoticePopup(){
+    clearInterval(timerId);
+    adPopup.style.display = "flex";
+  }
+
+  adRestartBtn.addEventListener("click", startGame);
 
   function handleAuth(){
     var teamVal = teamSelect.value;
@@ -692,7 +781,6 @@
       sabunInput.focus(); return;
     }
 
-    // ★ 브라우저 영구 저장 (5개 게임 모두 공유됨)
     localStorage.setItem("sh_mini_team", teamVal);
     localStorage.setItem("sh_mini_sabun", val);
 
@@ -717,8 +805,10 @@
   window.addEventListener('touchmove', onMove, {passive:false});
   window.addEventListener('touchend', onUp);
 
-  document.getElementById('restartBtn').addEventListener('click', startGame);
-  document.getElementById('modalRestart').addEventListener('click', startGame);
+  // 하단 버튼 및 결과창 재시작 시 10대 업무수칙 팝업 노출
+  document.getElementById('restartBtn').addEventListener('click', showNoticePopup);
+  document.getElementById('modalRestart').addEventListener('click', showNoticePopup);
+
   document.getElementById('ruleBtn').addEventListener('click', function(){
     ruleOverlay.classList.add('show');
   });
@@ -729,7 +819,7 @@
     if(e.target === ruleOverlay) ruleOverlay.classList.remove('show');
   });
 
-  // ★ 기존 접속 기록 확인 (자동 로그인)
+  // 기존 저장 기록 확인
   var savedTeam = localStorage.getItem("sh_mini_team");
   var savedSabun = localStorage.getItem("sh_mini_sabun");
 
@@ -738,16 +828,13 @@
     currentSabun = savedSabun;
     playerBadge.textContent = "플레이어: " + currentTeam + " · " + currentSabun;
     playerBadge.style.display = "inline-block";
-    authOverlay.classList.remove('show'); // 팝업 생략
-    startGame(); // 즉시 게임 시작
+    authOverlay.classList.remove('show');
+    startGame();
   } else {
     authOverlay.classList.add('show');
     sabunInput.focus();
   }
 
-  // (선택) 사번을 잘못 입력했을 때 배지를 누르면 다시 입력할 수 있는 기능
-  playerBadge.style.cursor = "pointer";
-  playerBadge.title = "클릭 시 팀/사번 변경";
   playerBadge.addEventListener("click", function(){
     if(confirm("등록된 팀/사번 정보를 변경하시겠습니까?")){
       localStorage.removeItem("sh_mini_team");

@@ -31,12 +31,6 @@
     display:flex; flex-direction:column; align-items:center;
     min-height:100vh; min-height:100dvh; padding: 12px; gap:8px;
   }
-  .titlebar{ text-align:center; }
-  .titlebar h1{
-    font-size: clamp(18px, 3.2vw, 24px);
-    margin:0 0 4px; font-weight:700; letter-spacing:-0.02em; color:#fff;
-  }
-  .titlebar .sub{ font-size:11px; color: var(--ice); opacity:0.75; }
 
   /* 브랜드 헤더 */
   .brand-bar{
@@ -75,7 +69,7 @@
     font-weight: 800;
     color: var(--navy);
     background: var(--sky);
-    padding: 2px 8px; /* 좌우 패딩을 살짝 넓혀 뱃지가 꽉 차 보이게 조정 */
+    padding: 2px 8px;
     border-radius: 999px;
     width: fit-content;
     letter-spacing: -0.01em;
@@ -86,7 +80,7 @@
     color: var(--ice);
     background: rgba(255, 255, 255, 0.08);
     border: 1px solid rgba(255, 255, 255, 0.2);
-    padding: 6px 12px; /* 태그 볼륨감 확대 */
+    padding: 6px 12px;
     border-radius: 999px;
     white-space: nowrap;
     letter-spacing: -0.01em;
@@ -149,37 +143,85 @@
     box-shadow: 0 0 10px rgba(79, 157, 222, 0.4);
   }
 
+  /* 가로형 2단 대시보드 */
+  .game-dash{
+    width: 100%;
+    max-width: 640px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    background: linear-gradient(135deg, rgba(255,255,255,0.07), rgba(255,255,255,0.02));
+    border: 1px solid rgba(255,255,255,0.14);
+    border-radius: 14px;
+    padding: 10px 12px;
+    box-sizing: border-box;
+  }
+  .dash-left{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+  }
+  .game-title{
+    font-size: clamp(16px, 3.2vw, 19px);
+    font-weight: 800;
+    color: #fff;
+    margin: 0;
+    letter-spacing: -0.02em;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    white-space: nowrap;
+  }
   .player-tag{
-    font-size: 12px;
+    font-size: 11px;
     background: rgba(47, 191, 158, 0.15);
     border: 1px solid var(--accent);
     color: var(--accent);
-    padding: 3px 10px;
+    padding: 3px 9px;
     border-radius: 20px;
     font-weight: 600;
-    display:inline-block;
-    margin-top:6px;
+    white-space: nowrap;
+    cursor: pointer;
   }
+  .dash-stats{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    width: 100%;
+  }
+  .stat-card{
+    flex: 1;
+    background: rgba(6, 20, 36, 0.75);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 10px;
+    padding: 5px 6px;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-width: 0;
+  }
+  .stat-lbl{
+    font-size: 10px;
+    color: var(--ice);
+    opacity: 0.75;
+    line-height: 1.1;
+    margin-bottom: 2px;
+    white-space: nowrap;
+  }
+  .stat-val{
+    font-size: 16px;
+    font-weight: 800;
+    font-family: var(--font-num);
+    font-variant-numeric: tabular-nums;
+    line-height: 1.1;
+  }
+  .stat-card.time .stat-val { color: var(--sky); }
+  .stat-card.stage .stat-val { color: var(--accent); }
 
-  .panel{
-    display:flex; align-items:center; justify-content:center; gap:14px;
-    background: var(--ocean);
-    border:1px solid rgba(255,255,255,0.12);
-    border-radius: 14px;
-    padding: 10px 18px;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-  }
-  .counter{
-    font-family: var(--font-num); font-weight:800; font-size:22px;
-    background: #061424;
-    color: var(--accent);
-    border-radius:8px;
-    padding: 4px 10px;
-    min-width:64px; text-align:center;
-    border:1px solid rgba(255,255,255,0.1);
-  }
-  .counter.timer{ color: var(--sky); }
-
+  /* 보드 래퍼 */
   #board-wrap{
     background: linear-gradient(180deg, #0E2A4A, #0A2036);
     border: 1px solid rgba(255,255,255,0.1);
@@ -187,7 +229,7 @@
     padding: 10px;
     box-shadow: 0 20px 60px rgba(0,0,0,0.45), inset 0 1px 0 rgba(255,255,255,0.05);
     display:flex; justify-content:center; align-items:center;
-    max-width: min(94vw, 640px);
+    width: min(94vw, 640px);
     box-sizing: border-box;
   }
   canvas{
@@ -196,25 +238,49 @@
     background:#000;
     border-radius:10px;
     max-width:100%;
-    max-height:55dvh;
+    max-height:50dvh;
     border: 1px solid rgba(255,255,255,0.15);
     display: block;
   }
 
-  .hud{ font-size:13px; color:var(--ice); opacity:0.8; text-align:center; }
+  .hud{ font-size:12px; color:var(--ice); opacity:0.75; text-align:center; margin-top:2px; }
   .hud kbd{
     background: #061424; border:1px solid rgba(255,255,255,0.2);
     padding:1px 6px; border-radius:4px; font-family:var(--font-num); color:var(--sky);
   }
 
-  .controls{ display:flex; gap:12px; }
-  .controls button{
-    font-size:18px; padding:12px 24px; border-radius:12px;
-    background: var(--ocean); color:#fff; border:1px solid rgba(255,255,255,0.2);
-    cursor:pointer; transition:background 0.1s ease, transform 0.1s ease;
+  /* 하단 방향 조작 버튼 (양 끝 분할 여백 배치) */
+  .dir-controls{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    max-width: 640px;
+    padding: 0 8px;
+    box-sizing: border-box;
   }
-  .controls button:active{ background:var(--blue); transform:scale(0.96); }
+  .dir-controls button{
+    width: 44%;
+    max-width: 180px;
+    font-size: 24px;
+    padding: 13px 0;
+    border-radius: 14px;
+    background: var(--ocean);
+    color: #fff;
+    border: 1px solid rgba(255,255,255,0.2);
+    cursor: pointer;
+    transition: background 0.1s ease, transform 0.1s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .dir-controls button:active{
+    background: var(--blue);
+    transform: scale(0.96);
+  }
 
+  /* 다시 시작 / 규칙 보기 컨트롤 */
+  .controls{ display:flex; gap:10px; margin-top:2px; }
   button.main{
     font-family: var(--font-ui); font-size:14px; font-weight:600;
     background: var(--blue); color:#fff; border:none;
@@ -231,13 +297,16 @@
   }
   button.ghost:hover{ background: rgba(255,255,255,0.08); }
 
-  #overlay, #authOverlay{
+  .hint{ font-size:12px; color:var(--ice); opacity:0.6; text-align:center; max-width:480px; }
+
+  /* 모달 */
+  #overlay, #ruleOverlay, #authOverlay{
     position:fixed; inset:0;
     background: rgba(4,12,24,0.85);
     display:none; align-items:center; justify-content:center; z-index:100;
     padding:20px;
   }
-  #overlay.show, #authOverlay.show{ display:flex; }
+  #overlay.show, #ruleOverlay.show, #authOverlay.show{ display:flex; }
   .modal{
     background: linear-gradient(180deg, #123A63, #0B1F3A);
     border: 1px solid rgba(255,255,255,0.15);
@@ -251,6 +320,7 @@
   .modal h2{ margin:0 0 8px; font-size:22px; }
   .modal .bigtime{ font-size:36px; font-weight:800; color: var(--accent); margin: 10px 0; font-family: var(--font-num);}
   .modal p{ margin:0 0 18px; color: var(--ice); font-size:14px; line-height:1.6; }
+  .modal ol{ text-align:left; color:var(--ice); font-size:13px; line-height:1.8; padding-left:20px; margin:0 0 18px; }
 
   .auth-input{
     width: 100%; padding: 12px 14px;
@@ -268,6 +338,22 @@
   }
   select.auth-input option{ background: #123A63; color:#fff; }
   .auth-error{ color: var(--danger); font-size: 12px; margin: -10px 0 14px; height: 14px; display: block; }
+
+  /* 10대 업무수칙 팝업 레이아웃 */
+  .adPopup{
+    position:fixed; inset:0;
+    background:rgba(4,12,24,0.92);
+    display:none; justify-content:center; align-items:center;
+    z-index:9999; padding:20px;
+  }
+  .adBox{ text-align:center; max-width:90vw; }
+  .adBox img{
+    width:350px; max-width:90vw; border-radius:12px;
+    box-shadow:0 15px 40px rgba(0,0,0,0.6);
+  }
+  #adRestartBtn{
+    width:auto; min-width:140px; margin-top:16px;
+  }
 </style>
 </head>
 <body>
@@ -308,7 +394,7 @@
             <text x="20" y="27" text-anchor="middle" font-family="Arial, sans-serif" font-weight="800" font-size="18" fill="#fff">SDS</text>
           </svg>
         </div>
-		<div class="brand-text">
+        <div class="brand-text">
           <span class="brand-name">신한DS 금융본부</span>
           <span class="brand-dept">3분기 리버스 멘토링</span>
         </div>
@@ -330,42 +416,63 @@
     </nav>
   </div>
 
-<script>
-(function(){
-  var bar = document.getElementById('brandBar');
-  var toggle = document.getElementById('navToggle');
-  var KEY = 'sh_mini_navCollapsed';
-  if(!bar || !toggle) return;
-  var saved = localStorage.getItem(KEY);
-  if(saved === '1') bar.classList.add('collapsed');
-  toggle.addEventListener('click', function(){
-    var collapsed = bar.classList.toggle('collapsed');
-    localStorage.setItem(KEY, collapsed ? '1' : '0');
-  });
-})();
-</script>
+  <script>
+  (function(){
+    var bar = document.getElementById('brandBar');
+    var toggle = document.getElementById('navToggle');
+    var KEY = 'sh_mini_navCollapsed';
+    if(!bar || !toggle) return;
+    var saved = localStorage.getItem(KEY);
+    if(saved === '1') bar.classList.add('collapsed');
+    toggle.addEventListener('click', function(){
+      var collapsed = bar.classList.toggle('collapsed');
+      localStorage.setItem(KEY, collapsed ? '1' : '0');
+    });
+  })();
+  </script>
 
-  <div class="titlebar">
-    <h1>⚽ 공튀기기</h1>
-    <div class="sub">방향만 조작해 모든 스테이지를 최단 시간 내에 클리어하세요</div>
-    <div><span id="playerBadge" class="player-tag" style="display:none;"></span></div>
-  </div>
+  <!-- 가로형 2단 대시보드 (사과게임 표준과 일치) -->
+  <div class="game-dash">
+    <div class="dash-left">
+      <h1 class="game-title">⚽ 공튀기기</h1>
+      <span id="playerBadge" class="player-tag" style="display:none;" title="클릭 시 팀/사번 변경"></span>
+    </div>
 
-  <div class="panel">
-    <div class="counter timer" id="timeCount">000</div>
+    <div class="dash-stats">
+      <div class="stat-card time">
+        <span class="stat-lbl">진행 시간</span>
+        <span class="stat-val"><span id="timeCount">000</span>초</span>
+      </div>
+      <div class="stat-card stage">
+        <span class="stat-lbl">스테이지</span>
+        <span class="stat-val" id="stageVal">1 / 5</span>
+      </div>
+    </div>
   </div>
 
   <div id="board-wrap">
     <canvas id="game" width="640" height="480"></canvas>
   </div>
 
-  <div class="controls">
+  <div class="hud">
+    방향 조작 → <kbd>◀</kbd>/<kbd>▶</kbd> (또는 <kbd>A</kbd>/<kbd>D</kbd>)
+  </div>
+
+  <!-- 하단 조작 버튼 (양 끝 분할 여백 배치) -->
+  <div class="dir-controls">
     <button id="btnLeft" aria-label="Left">◀</button>
-    <button id="btnPause" aria-label="Pause">⏸</button>
     <button id="btnRight" aria-label="Right">▶</button>
   </div>
+
+  <!-- 시스템 제어 버튼 -->
+  <div class="controls">
+    <button class="main" id="restartBtn">다시 시작</button>
+    <button class="ghost" id="ruleBtn">규칙 보기</button>
+  </div>
+  <div class="hint">공의 방향만 조작하여 🏁 골 깃발에 도달하세요. 총 5개 스테이지입니다.</div>
 </div>
 
+<!-- 스테이지 클리어 / 게임오버 결과 모달 -->
 <div id="overlay">
   <div class="modal">
     <h2 id="ovTitle">알림</h2>
@@ -375,6 +482,32 @@
       <button class="main" id="btnRestartStage1" style="display:none;">스테이지 1부터 다시</button>
       <button class="ghost" id="btnCloseOverlay">닫기</button>
     </div>
+  </div>
+</div>
+
+<!-- 게임 규칙 모달 -->
+<div id="ruleOverlay">
+  <div class="modal">
+    <h2>게임 규칙</h2>
+    <ol>
+      <li>공은 바닥에 닿으면 자동으로 계속 튕겨 오릅니다.</li>
+      <li>화면 하단 버튼(◀ / ▶) 또는 키보드(<kbd>A</kbd>/<kbd>D</kbd>)로 <b>좌우 방향만 조작</b>하세요.</li>
+      <li>🏁 <b>골 깃발</b>: 닿으면 다음 스테이지로 통과됩니다 (총 5개).</li>
+      <li>🟩 <b>점퍼 패드(▲)</b>: 밟으면 높이 솟구치는 슈퍼 점프를 합니다.</li>
+      <li>💣 <b>폭탄 & 낙사</b>: 닿으면 즉시 실패하여 해당 스테이지를 재도전합니다.</li>
+      <li>⚪ <b>균열 블록</b>: 1회 밟으면 바스러져 사라집니다.</li>
+      <li>⏩ <b>부스터 화살표</b>: 닿는 순간 해당 방향으로 고속 질주합니다.</li>
+    </ol>
+    <button class="main" id="ruleCloseBtn">확인</button>
+  </div>
+</div>
+
+<!-- 10대 업무수칙 팝업 (다시 시작 클릭 시 노출) -->
+<div class="adPopup" id="adPopup">
+  <div class="adBox">
+    <img src="ds_10.png" alt="신한DS 10대 업무수칙">
+    <br>
+    <button class="main" id="adRestartBtn">재시작하기</button>
   </div>
 </div>
 
@@ -447,14 +580,12 @@
   window.addEventListener('keydown', function(e){
     var k = e.key.toLowerCase();
     keys.add(k);
-    if(k==='p'){ paused = !paused; return; }
     if(MOVE_KEYS.indexOf(k) !== -1 && paused) paused = false;
   });
   window.addEventListener('keyup', function(e){ keys.delete(e.key.toLowerCase()); });
 
   var btnLeft  = document.getElementById('btnLeft');
   var btnRight = document.getElementById('btnRight');
-  var btnPause = document.getElementById('btnPause');
   function press(name,on){ if(on) keys.add(name); else keys.delete(name); }
   ['mousedown','touchstart'].forEach(function(ev){
     btnLeft.addEventListener(ev, function(e){ e.preventDefault(); if(paused) paused=false; press('touchleft', true); });
@@ -464,7 +595,6 @@
     btnLeft.addEventListener(ev, function(e){ e.preventDefault(); press('touchleft', false); });
     btnRight.addEventListener(ev, function(e){ e.preventDefault(); press('touchright',false); });
   });
-  btnPause.addEventListener('click', function(){ paused = !paused; });
 
   function pointerSide(e){
     var rect = canvas.getBoundingClientRect();
@@ -534,7 +664,12 @@
   var messageTimer = 0, messageText = '', arrowMode = false, arrowDir = 0;
   var startTime = performance.now(), failCount = 0, finalClearShown = false;
   var timeCountEl = document.getElementById('timeCount');
+  var stageValEl = document.getElementById('stageVal');
   var elapsedSec = 0, gameTimerId = null;
+
+  function updateStageDisplay(){
+    if(stageValEl) stageValEl.textContent = (stage + 1) + ' / ' + levels.length;
+  }
   function updateTimeDisplay(){ timeCountEl.textContent = String(elapsedSec).padStart(3,'0'); }
   function startGameTimer(){
     clearInterval(gameTimerId);
@@ -550,6 +685,14 @@
   var ovBody  = document.getElementById('ovBody');
   var btnRestartStage1 = document.getElementById('btnRestartStage1');
   var btnCloseOverlay  = document.getElementById('btnCloseOverlay');
+
+  var ruleOverlay = document.getElementById('ruleOverlay');
+  var ruleBtn = document.getElementById('ruleBtn');
+  var ruleCloseBtn = document.getElementById('ruleCloseBtn');
+  var restartBtn = document.getElementById('restartBtn');
+
+  var adPopup = document.getElementById("adPopup");
+  var adRestartBtn = document.getElementById("adRestartBtn");
 
   var authOverlay = document.getElementById('authOverlay');
   var teamSelect = document.getElementById('teamSelect');
@@ -570,25 +713,56 @@
   }
   function hideOverlay(){ overlay.classList.remove('show'); paused = false; }
 
+  function resetToStage1(){
+    stage = 0;
+    grid = levels[stage].grid.map(function(r){ return r.slice(); });
+    startTime = performance.now();
+    failCount = 0;
+    applySpawn();
+    finalClearShown = false;
+    elapsedSec = 0;
+    updateTimeDisplay();
+    updateStageDisplay();
+    startGameTimer();
+  }
+
+  // 10대 업무수칙 팝업 표시 (타이머 일시 정지)
+  function showNoticePopup(){
+    paused = true;
+    adPopup.style.display = "flex";
+  }
+
+  adRestartBtn.addEventListener("click", function(){
+    adPopup.style.display = "none";
+    overlay.classList.remove('show');
+    resetToStage1();
+    paused = false;
+    sendLog("시작", { score: 0 });
+  });
+
   btnCloseOverlay.addEventListener('click', function(){
-    if(finalClearShown){
-      stage = 0; grid = levels[stage].grid.map(function(r){ return r.slice(); });
-      startTime = performance.now(); failCount = 0; applySpawn(); finalClearShown = false;
-      elapsedSec = 0; updateTimeDisplay(); startGameTimer();
-    }
+    if(finalClearShown){ resetToStage1(); }
     hideOverlay();
   });
+
+  // 하단 버튼 및 결과창 재시작 시 10대 업무수칙 팝업 노출
+  restartBtn.addEventListener('click', showNoticePopup);
   btnRestartStage1.addEventListener('click', function(){
-    stage = 0; grid = levels[stage].grid.map(function(r){ return r.slice(); });
-    startTime = performance.now(); failCount = 0; applySpawn(); finalClearShown = false;
-    elapsedSec = 0; updateTimeDisplay(); startGameTimer();
     hideOverlay();
+    showNoticePopup();
+  });
+
+  ruleBtn.addEventListener('click', function(){ ruleOverlay.classList.add('show'); });
+  ruleCloseBtn.addEventListener('click', function(){ ruleOverlay.classList.remove('show'); });
+  ruleOverlay.addEventListener('click', function(e){
+    if(e.target === ruleOverlay) ruleOverlay.classList.remove('show');
   });
 
   function applySpawn(){
     var s = levels[stage].spawn || {x:6, y:6};
     ball.x = s.x * TILE + TILE/2; ball.y = s.y * TILE;
     ball.vx = 0; ball.vy = 0; arrowMode = false; arrowDir = 0;
+    updateStageDisplay();
   }
   applySpawn();
 
@@ -707,42 +881,152 @@
       for(var c=0; c<COLS; c++){
         var t = grid[r][c], x = c*TILE, y = r*TILE;
         if(t===T.EMPTY) continue;
+
         if(t===T.GOAL){
-          ctx.fillStyle = '#0B1F3A'; ctx.fillRect(x, y, TILE, TILE);
-          ctx.strokeStyle = '#2FBF9E'; ctx.strokeRect(x+0.5, y+0.5, TILE-1, TILE-1);
+          // 🏁 골 깃발
+          ctx.fillStyle = '#062822';
+          ctx.fillRect(x, y, TILE, TILE);
+          ctx.strokeStyle = '#2FBF9E';
+          ctx.lineWidth = 1;
+          ctx.strokeRect(x+0.5, y+0.5, TILE-1, TILE-1);
+
+          ctx.strokeStyle = '#e2e8f0';
+          ctx.lineWidth = 1.5;
+          ctx.beginPath();
+          ctx.moveTo(x+4.5, y+2.5);
+          ctx.lineTo(x+4.5, y+13.5);
+          ctx.stroke();
+
+          ctx.fillStyle = '#fbbf24';
+          ctx.beginPath();
+          ctx.moveTo(x+4.5, y+3);
+          ctx.lineTo(x+13, y+6);
+          ctx.lineTo(x+4.5, y+9);
+          ctx.closePath();
+          ctx.fill();
+
         } else if(t===T.RED){
-          ctx.fillStyle = '#163A63'; ctx.fillRect(x, y, TILE, TILE);
-          ctx.fillStyle = '#1B5FA8'; ctx.fillRect(x+1, y+1, TILE-2, TILE-2);
-          ctx.strokeStyle = '#4F9DDE'; ctx.strokeRect(x+0.5, y+0.5, TILE-1, TILE-1);
+          // 🧱 기본 벽돌
+          ctx.fillStyle = '#163A63';
+          ctx.fillRect(x, y, TILE, TILE);
+          ctx.fillStyle = '#1B5FA8';
+          ctx.fillRect(x+1, y+1, TILE-2, TILE-2);
+          ctx.strokeStyle = '#4F9DDE';
+          ctx.lineWidth = 1;
+          ctx.strokeRect(x+0.5, y+0.5, TILE-1, TILE-1);
+
         } else if(t===T.WHITE){
-          ctx.fillStyle = '#334155'; ctx.fillRect(x, y, TILE, TILE);
-          ctx.fillStyle = '#94a3b8'; ctx.fillRect(x+1, y+1, TILE-2, TILE-2);
+          // ⚪ 균열 블록
+          ctx.fillStyle = '#1e293b';
+          ctx.fillRect(x, y, TILE, TILE);
+          ctx.fillStyle = '#e2e8f0';
+          ctx.fillRect(x+1, y+1, TILE-2, TILE-2);
+          ctx.strokeStyle = '#94a3b8';
+          ctx.lineWidth = 1;
+          ctx.strokeRect(x+0.5, y+0.5, TILE-1, TILE-1);
+
+          ctx.strokeStyle = '#64748b';
+          ctx.lineWidth = 1;
+          ctx.beginPath();
+          ctx.moveTo(x+3, y+3); ctx.lineTo(x+7, y+7); ctx.lineTo(x+5, y+13);
+          ctx.moveTo(x+13, y+3); ctx.lineTo(x+9, y+8); ctx.lineTo(x+12, y+13);
+          ctx.stroke();
+
         } else if(t===T.JUMPER){
-          ctx.fillStyle = '#065f46'; ctx.fillRect(x+1, y+1, TILE-2, TILE-2);
-          ctx.strokeStyle = '#34d399'; ctx.strokeRect(x+0.5, y+0.5, TILE-1, TILE-1);
+          // 🟩 점퍼 패드(▲)
+          ctx.fillStyle = '#022c22';
+          ctx.fillRect(x, y, TILE, TILE);
+          ctx.strokeStyle = '#34d399';
+          ctx.lineWidth = 1;
+          ctx.strokeRect(x+0.5, y+0.5, TILE-1, TILE-1);
+
+          ctx.fillStyle = '#10b981';
+          ctx.fillRect(x+2, y+2, TILE-4, 2.5);
+
+          ctx.fillStyle = '#a7f3d0';
+          ctx.beginPath();
+          ctx.moveTo(x+8, y+5.5);
+          ctx.lineTo(x+12, y+9.5);
+          ctx.lineTo(x+9.5, y+9.5);
+          ctx.lineTo(x+9.5, y+13.5);
+          ctx.lineTo(x+6.5, y+13.5);
+          ctx.lineTo(x+6.5, y+9.5);
+          ctx.lineTo(x+4, y+9.5);
+          ctx.closePath();
+          ctx.fill();
+
         } else if(t===T.BOMB){
-          ctx.fillStyle = '#1e1b4b'; ctx.fillRect(x, y, TILE, TILE);
-          ctx.fillStyle = '#E0567A'; ctx.beginPath(); ctx.arc(x+TILE/2, y+TILE/2, 5, 0, Math.PI*2); ctx.fill();
+          // 💣 도화선 폭탄
+          ctx.fillStyle = '#1f070e';
+          ctx.fillRect(x, y, TILE, TILE);
+          ctx.strokeStyle = '#f43f5e';
+          ctx.lineWidth = 1;
+          ctx.strokeRect(x+0.5, y+0.5, TILE-1, TILE-1);
+
+          ctx.fillStyle = '#0f172a';
+          ctx.beginPath();
+          ctx.arc(x+7.5, y+9.5, 4.5, 0, Math.PI*2);
+          ctx.fill();
+          ctx.strokeStyle = '#64748b';
+          ctx.lineWidth = 0.8;
+          ctx.stroke();
+
+          ctx.fillStyle = '#94a3b8';
+          ctx.beginPath();
+          ctx.arc(x+6, y+8, 1, 0, Math.PI*2);
+          ctx.fill();
+
+          ctx.strokeStyle = '#ca8a04';
+          ctx.lineWidth = 1;
+          ctx.beginPath();
+          ctx.moveTo(x+7.5, y+5);
+          ctx.quadraticCurveTo(x+10, y+4, x+11, y+2.5);
+          ctx.stroke();
+
+          ctx.fillStyle = '#ef4444';
+          ctx.fillRect(x+10, y+1.5, 2.5, 2.5);
+          ctx.fillStyle = '#fbbf24';
+          ctx.fillRect(x+10.5, y+2, 1.5, 1.5);
+
         } else if(t===T.ARROW_LEFT || t===T.ARROW_RIGHT){
-          ctx.fillStyle = '#f59e0b'; ctx.fillRect(x+1, y+1, TILE-2, TILE-2);
-          ctx.fillStyle = '#78350f'; ctx.beginPath();
-          if(t===T.ARROW_RIGHT){ ctx.moveTo(x+5,y+4); ctx.lineTo(x+11,y+8); ctx.lineTo(x+5,y+12); }
-          else { ctx.moveTo(x+11,y+4); ctx.lineTo(x+5,y+8); ctx.lineTo(x+11,y+12); }
-          ctx.closePath(); ctx.fill();
+          // ⏩ 부스터 화살표
+          ctx.fillStyle = '#451a03';
+          ctx.fillRect(x, y, TILE, TILE);
+          ctx.strokeStyle = '#f59e0b';
+          ctx.lineWidth = 1;
+          ctx.strokeRect(x+0.5, y+0.5, TILE-1, TILE-1);
+
+          ctx.fillStyle = '#fbbf24';
+          ctx.beginPath();
+          if(t===T.ARROW_RIGHT){
+            ctx.moveTo(x+3.5, y+4); ctx.lineTo(x+8.5, y+8); ctx.lineTo(x+3.5, y+12);
+            ctx.moveTo(x+7.5, y+4); ctx.lineTo(x+12.5, y+8); ctx.lineTo(x+7.5, y+12);
+          } else {
+            ctx.moveTo(x+12.5, y+4); ctx.lineTo(x+7.5, y+8); ctx.lineTo(x+12.5, y+12);
+            ctx.moveTo(x+8.5, y+4); ctx.lineTo(x+3.5, y+8); ctx.lineTo(x+8.5, y+12);
+          }
+          ctx.fill();
         }
       }
     }
 
     ctx.fillStyle = '#fff';
-    ctx.beginPath(); ctx.arc(ball.x, ball.y, ball.radius, 0, Math.PI*2); ctx.fill();
+    ctx.beginPath();
+    ctx.arc(ball.x, ball.y, ball.radius, 0, Math.PI*2);
+    ctx.fill();
 
     ctx.strokeStyle = 'rgba(79,157,222,0.6)';
-    ctx.beginPath(); ctx.moveTo(ball.x, ball.y);
-    ctx.lineTo(ball.x - ball.vx*0.05, ball.y - ball.vy*0.05); ctx.stroke();
+    ctx.beginPath();
+    ctx.moveTo(ball.x, ball.y);
+    ctx.lineTo(ball.x - ball.vx*0.05, ball.y - ball.vy*0.05);
+    ctx.stroke();
 
     if(messageTimer>0){
-      ctx.fillStyle = 'rgba(11,31,58,0.85)'; ctx.fillRect(0,0,W,24);
-      ctx.fillStyle = '#BFE2F7'; ctx.font = '12px monospace'; ctx.textAlign = 'center';
+      ctx.fillStyle = 'rgba(11,31,58,0.85)';
+      ctx.fillRect(0,0,W,24);
+      ctx.fillStyle = '#BFE2F7';
+      ctx.font = '12px monospace';
+      ctx.textAlign = 'center';
       ctx.fillText(messageText + ' (Stage ' + (stage+1) + ')', W/2, 16);
     }
   }
@@ -770,7 +1054,6 @@
       sabunInput.focus(); return;
     }
 
-    // ★ 브라우저 영구 저장 (5개 게임 모두 공유됨)
     localStorage.setItem("sh_mini_team", teamVal);
     localStorage.setItem("sh_mini_sabun", val);
 
@@ -779,7 +1062,9 @@
     playerBadge.textContent = "플레이어: " + currentTeam + " · " + currentSabun;
     playerBadge.style.display = "inline-block";
     authOverlay.classList.remove('show');
-    startGame();
+    startGameTimer();
+    paused = false;
+    sendLog("시작", { score: 0 });
   }
 
   authStartBtn.addEventListener('click', handleAuth);
@@ -788,7 +1073,6 @@
     teamSelect.classList.remove('error'); authError.textContent = "";
   });
 
-  // ★ 기존 접속 기록 확인 (자동 로그인)
   var savedTeam = localStorage.getItem("sh_mini_team");
   var savedSabun = localStorage.getItem("sh_mini_sabun");
 
@@ -797,16 +1081,15 @@
     currentSabun = savedSabun;
     playerBadge.textContent = "플레이어: " + currentTeam + " · " + currentSabun;
     playerBadge.style.display = "inline-block";
-    authOverlay.classList.remove('show'); // 팝업 생략
-    startGame(); // 즉시 게임 시작
+    authOverlay.classList.remove('show');
+    startGameTimer();
+    paused = false;
+    sendLog("시작", { score: 0 });
   } else {
     authOverlay.classList.add('show');
     sabunInput.focus();
   }
 
-  // (선택) 사번을 잘못 입력했을 때 배지를 누르면 다시 입력할 수 있는 기능
-  playerBadge.style.cursor = "pointer";
-  playerBadge.title = "클릭 시 팀/사번 변경";
   playerBadge.addEventListener("click", function(){
     if(confirm("등록된 팀/사번 정보를 변경하시겠습니까?")){
       localStorage.removeItem("sh_mini_team");
