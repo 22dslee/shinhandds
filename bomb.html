@@ -28,55 +28,124 @@
   }
   #app{
     display:flex; flex-direction:column; align-items:center;
-    min-height:100vh; padding: 18px; gap:14px;
+    min-height:100vh; min-height:100dvh; padding: 12px; gap:8px;
   }
   .titlebar{ text-align:center; }
   .titlebar h1{
-    font-size: clamp(22px, 4vw, 30px);
+    font-size: clamp(18px, 3.2vw, 24px);
     margin:0 0 4px; font-weight:700; letter-spacing:-0.02em; color:#fff;
   }
-  .titlebar .sub{ font-size:13px; color: var(--ice); opacity:0.75; }
+  .titlebar .sub{ font-size:11px; color: var(--ice); opacity:0.75; }
 
   /* 브랜드 헤더 */
   .brand-bar{
     width:100%;
     max-width: 640px;
     display:flex;
-    align-items:center;
-    justify-content:space-between;
-    gap:12px;
+    flex-direction:column;
+    gap:6px;
     background: linear-gradient(135deg, rgba(255,255,255,0.09), rgba(255,255,255,0.02));
     border:1px solid rgba(255,255,255,0.16);
-    border-radius:14px;
-    padding:10px 16px;
-    flex-wrap:wrap;
+    border-radius:16px;
+    padding:8px 12px;
+    box-sizing:border-box;
+  }
+  .brand-top{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:10px;
+    width:100%;
   }
   .brand-left{ display:flex; align-items:center; gap:10px; }
-  .brand-logo{ width:34px; height:34px; flex-shrink:0; }
+  .brand-logo{ width:32px; height:32px; flex-shrink:0; }
   .brand-logo svg{ width:100%; height:100%; display:block; }
   .brand-text{ display:flex; flex-direction:column; line-height:1.2; }
-  .brand-name{ font-size:14px; font-weight:800; color:#fff; letter-spacing:-0.01em; }
-  .brand-dept{
-    display:inline-block;
-    margin-top:3px;
-    font-size:11px;
-    font-weight:800;
+  .brand-name { 
+    font-size: 13px; 
+    font-weight: 800; 
+    color: #fff; 
+    letter-spacing: -0.02em; 
+  }
+  .brand-dept {
+    display: inline-block;
+    margin-top: 2px;
+    font-size: 10px;
+    font-weight: 800;
     color: var(--navy);
     background: var(--sky);
-    padding:2px 9px;
-    border-radius:999px;
+    padding: 2px 8px; /* 좌우 패딩을 살짝 넓혀 뱃지가 꽉 차 보이게 조정 */
+    border-radius: 999px;
     width: fit-content;
-    letter-spacing:-0.01em;
+    letter-spacing: -0.01em;
   }
-  .event-tag{
-    font-size:12px;
-    font-weight:700;
+  .event-tag {
+    font-size: 11px;
+    font-weight: 700;
     color: var(--ice);
-    background: rgba(255,255,255,0.07);
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    padding: 6px 12px; /* 태그 볼륨감 확대 */
+    border-radius: 999px;
+    white-space: nowrap;
+    letter-spacing: -0.01em;
+  }
+
+  .nav-toggle{
+    width:26px; height:26px; flex-shrink:0;
+    display:flex; align-items:center; justify-content:center;
+    background: rgba(255,255,255,0.08);
     border:1px solid rgba(255,255,255,0.18);
-    padding:6px 14px;
-    border-radius:999px;
-    white-space:nowrap;
+    border-radius:8px;
+    color: var(--ice);
+    cursor:pointer;
+  }
+  .nav-toggle:hover{ background: rgba(255,255,255,0.16); }
+  .nav-toggle svg{ width:14px; height:14px; transition: transform 0.2s ease; display:block; }
+  .brand-bar.collapsed .nav-games{ display:none; }
+  .brand-bar.collapsed .nav-toggle svg{ transform: rotate(-90deg); }
+  .brand-right{ display:flex; align-items:center; gap:6px; flex-shrink:0; }
+
+  /* 게임 바로가기 네비게이션 바 */
+  .nav-games{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:6px;
+    width:100%;
+    overflow-x:auto;
+    padding-top:4px;
+    border-top:1px solid rgba(255,255,255,0.08);
+  }
+  .nav-games::-webkit-scrollbar { display:none; }
+  .nav-item{
+    flex:1;
+    min-width:54px;
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    gap:4px;
+    padding:5px 7px;
+    border-radius:10px;
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.12);
+    color: var(--ice);
+    text-decoration: none;
+    font-size: 11px;
+    font-weight: 700;
+    transition: all 0.15s ease;
+    white-space: nowrap;
+  }
+  .nav-item:hover{
+    background: rgba(255,255,255,0.15);
+    color: #fff;
+    transform: translateY(-1px);
+  }
+  .nav-item.active{
+    background: var(--blue);
+    border-color: var(--sky);
+    color: #fff;
+    box-shadow: 0 0 10px rgba(79, 157, 222, 0.4);
   }
 
   .player-tag{
@@ -191,12 +260,15 @@
     font-family: var(--font-ui); font-size:14px; font-weight:600;
     background: var(--blue); color:#fff; border:none;
     padding: 10px 20px; border-radius: 10px; cursor:pointer;
+    transition: background 0.15s ease, transform 0.1s ease;
   }
   button.main:hover{ background: var(--sky); }
+  button.main:active{ transform: scale(0.97); }
   button.ghost{
     background: transparent; border:1px solid rgba(255,255,255,0.25);
     color: var(--ice); font-family: var(--font-ui); font-size:14px; font-weight:600;
     padding: 10px 20px; border-radius: 10px; cursor:pointer;
+    transition: background 0.15s ease;
   }
   button.ghost:hover{ background: rgba(255,255,255,0.08); }
 
@@ -277,6 +349,7 @@
       <option value="증권채널팀">증권채널팀</option>
       <option value="카드개발팀">카드개발팀</option>
       <option value="라이프개발팀">라이프개발팀</option>
+      <option value="기타">기타</option>
     </select>
     <input type="text" id="sabunInput" class="auth-input" placeholder="사번 입력" maxlength="10">
     <span class="auth-error" id="authError"></span>
@@ -285,27 +358,58 @@
 </div>
 
 <div id="app">
-  <div class="brand-bar">
-    <div class="brand-left">
-      <div class="brand-logo" aria-hidden="true">
-        <svg viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg">
-          <defs>
-            <linearGradient id="logoGrad" x1="0" y1="0" x2="1" y2="1">
-              <stop offset="0" stop-color="#4F9DDE"/>
-              <stop offset="1" stop-color="#123A63"/>
-            </linearGradient>
-          </defs>
-          <rect x="1" y="1" width="38" height="38" rx="10" fill="url(#logoGrad)" stroke="rgba(255,255,255,0.25)"/>
-          <text x="20" y="27" text-anchor="middle" font-family="Arial, sans-serif" font-weight="800" font-size="18" fill="#fff">SDS</text>
-        </svg>
+  <!-- 브랜드 바 (5종 게임 바로가기 탭 내장) -->
+  <div class="brand-bar" id="brandBar">
+    <div class="brand-top">
+      <div class="brand-left">
+        <div class="brand-logo" aria-hidden="true">
+          <svg viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <linearGradient id="logoGrad" x1="0" y1="0" x2="1" y2="1">
+                <stop offset="0" stop-color="#4F9DDE"/>
+                <stop offset="1" stop-color="#123A63"/>
+              </linearGradient>
+            </defs>
+            <rect x="1" y="1" width="38" height="38" rx="10" fill="url(#logoGrad)" stroke="rgba(255,255,255,0.25)"/>
+            <text x="20" y="27" text-anchor="middle" font-family="Arial, sans-serif" font-weight="800" font-size="18" fill="#fff">SDS</text>
+          </svg>
+        </div>
+		<div class="brand-text">
+          <span class="brand-name">신한DS 금융본부</span>
+          <span class="brand-dept">3분기 리버스 멘토링</span>
+        </div>
       </div>
-      <div class="brand-text">
-        <span class="brand-name">신한DS</span>
-        <span class="brand-dept">금융본부</span>
+      <div class="brand-right">
+        <div class="event-tag">🏆 소통 미니게임대회</div>
+        <button class="nav-toggle" id="navToggle" aria-label="게임 목록 접기/펼치기" type="button">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+        </button>
       </div>
     </div>
-    <div class="event-tag">🏆 금융본부 미니게임대회</div>
+    
+    <nav class="nav-games" aria-label="게임 종목 바로가기">
+      <a href="https://derekyn.github.io/ShinhanDSGames/ball.html" class="nav-item">🦖 공튀기기</a>
+      <a href="https://derekyn.github.io/ShinhanDSGames/mole.html" class="nav-item">🐹 두더지</a>
+      <a href="https://derekyn.github.io/ShinhanDSGames/apple.html" class="nav-item">🍎 사과</a>
+      <a href="https://derekyn.github.io/ShinhanDSGames/bomb.html" class="nav-item active">💣 지뢰</a>
+      <a href="https://derekyn.github.io/ShinhanDSGames/drop.html" class="nav-item">💧 드롭</a>
+    </nav>
   </div>
+
+<script>
+(function(){
+  var bar = document.getElementById('brandBar');
+  var toggle = document.getElementById('navToggle');
+  var KEY = 'sh_mini_navCollapsed';
+  if(!bar || !toggle) return;
+  var saved = localStorage.getItem(KEY);
+  if(saved === '1') bar.classList.add('collapsed');
+  toggle.addEventListener('click', function(){
+    var collapsed = bar.classList.toggle('collapsed');
+    localStorage.setItem(KEY, collapsed ? '1' : '0');
+  });
+})();
+</script>
 
   <div class="titlebar">
     <h1>💣 지뢰찾기</h1>
@@ -354,7 +458,6 @@
 
 <script>
 (function(){
-  // [설정] 최신 Google Apps Script 웹 앱 URL 및 식별자
   var GOOGLE_WEBHOOK_URL = "https://script.google.com/macros/s/AKfycbyY6mM4y9ltyZhDn7fMCctYajEBye1sxZpQrQ-FcabhllionztMTlJEJMCKCDy_ZxCOMg/exec";
   var GAME_NAME = "지뢰찾기";
 
@@ -381,7 +484,6 @@
   var playerBadge = document.getElementById('playerBadge');
   var authError = document.getElementById('authError');
 
-  // 스프레드시트 비동기 전송 함수
   function logEvent(eventType, extraData){
     if(!GOOGLE_WEBHOOK_URL) return;
     var payload = Object.assign({
@@ -555,7 +657,6 @@
       faceBtn.textContent = '😵';
       showEnd(false);
 
-      // 패배 시 로그 전송
       logEvent("종료", {
         score: "-",
         detail: "지뢰 폭발 (패배, 진행: " + elapsed + "초)"
@@ -572,7 +673,6 @@
       faceBtn.textContent = '😎';
       showEnd(true);
 
-      // 승리 시 클리어 시간을 점수(score)로 기록 전송
       logEvent("종료", {
         score: elapsed,
         detail: "클리어 성공 (" + elapsed + "초 소요)"
@@ -678,7 +778,6 @@
     render();
     updateMineCounter();
 
-    // 시작 로그 전송
     logEvent("시작", { score: 0 });
   }
 
@@ -688,20 +787,18 @@
 
     if(!teamVal){
       authError.textContent = "팀을 선택해 주세요.";
-      teamSelect.classList.add('error');
-      teamSelect.focus();
-      return;
+      teamSelect.classList.add('error'); teamSelect.focus(); return;
     }
     if(!val){
       authError.textContent = "사번을 입력해 주세요.";
-      teamSelect.classList.remove('error');
-      sabunInput.classList.add('error');
-      sabunInput.focus();
-      return;
+      teamSelect.classList.remove('error'); sabunInput.classList.add('error');
+      sabunInput.focus(); return;
     }
-    authError.textContent = "";
-    teamSelect.classList.remove('error');
-    sabunInput.classList.remove('error');
+
+    // ★ 브라우저 영구 저장 (5개 게임 모두 공유됨)
+    localStorage.setItem("sh_mini_team", teamVal);
+    localStorage.setItem("sh_mini_sabun", val);
+
     currentTeam = teamVal;
     currentSabun = val;
     playerBadge.textContent = "플레이어: " + currentTeam + " · " + currentSabun;
@@ -734,7 +831,32 @@
   });
 
   attachEvents();
-  sabunInput.focus();
+  // ★ 기존 접속 기록 확인 (자동 로그인)
+  var savedTeam = localStorage.getItem("sh_mini_team");
+  var savedSabun = localStorage.getItem("sh_mini_sabun");
+
+  if(savedTeam && savedSabun){
+    currentTeam = savedTeam;
+    currentSabun = savedSabun;
+    playerBadge.textContent = "플레이어: " + currentTeam + " · " + currentSabun;
+    playerBadge.style.display = "inline-block";
+    authOverlay.classList.remove('show'); // 팝업 생략
+    startGame(); // 즉시 게임 시작
+  } else {
+    authOverlay.classList.add('show');
+    sabunInput.focus();
+  }
+
+  // (선택) 사번을 잘못 입력했을 때 배지를 누르면 다시 입력할 수 있는 기능
+  playerBadge.style.cursor = "pointer";
+  playerBadge.title = "클릭 시 팀/사번 변경";
+  playerBadge.addEventListener("click", function(){
+    if(confirm("등록된 팀/사번 정보를 변경하시겠습니까?")){
+      localStorage.removeItem("sh_mini_team");
+      localStorage.removeItem("sh_mini_sabun");
+      location.reload();
+    }
+  });
 })();
 </script>
 </body>
